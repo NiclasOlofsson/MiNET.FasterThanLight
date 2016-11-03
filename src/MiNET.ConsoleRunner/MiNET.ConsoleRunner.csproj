@@ -39,8 +39,8 @@
     <StartupObject>MiNET.ConsoleRunner.MiNetService</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="fNbt, Version=0.6.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\fNbt.0.6.3\lib\net35-client\fNbt.dll</HintPath>
+    <Reference Include="fNbt, Version=0.6.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiNET.fnbt.0.6.9\lib\net35-client\fNbt.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="jose-jwt, Version=1.9.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -63,9 +63,9 @@
       <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.1.0.0\lib\net45\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MiNET, Version=1.0.1185.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\MiNET\src\MiNET\MiNET\bin\Release\MiNET.dll</HintPath>
+    <Reference Include="MiNET, Version=1.0.1245.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiNET.1.0.1245\lib\net461\MiNET.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>

@@ -40,6 +40,11 @@ namespace MiNET.Ftl.Core.Proxy
 			}
 		}
 
+		public void HandleMcpeResourcePackClientResponse(McpeResourcePackClientResponse message)
+		{
+			WritePackage(message);
+		}
+
 		public void HandleMcpeText(McpeText message)
 		{
 			WritePackage(message);
@@ -136,6 +141,16 @@ namespace MiNET.Ftl.Core.Proxy
 		}
 
 		public void HandleMcpeItemFramDropItem(McpeItemFramDropItem message)
+		{
+			WritePackage(message);
+		}
+
+		public void HandleMcpeCommandStep(McpeCommandStep message)
+		{
+			WritePackage(message);
+		}
+
+		public void HandleMcpeResourcePackChunkRequest(McpeResourcePackChunkRequest message)
 		{
 			WritePackage(message);
 		}
