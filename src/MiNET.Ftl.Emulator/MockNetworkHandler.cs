@@ -16,7 +16,6 @@ namespace MiNET.Ftl.Emulator
 
 		public void Close()
 		{
-			Log.Warn("Close");
 		}
 
 

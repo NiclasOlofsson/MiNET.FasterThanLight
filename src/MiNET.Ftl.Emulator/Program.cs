@@ -18,9 +18,9 @@ namespace MiNET.Ftl.Emulator
 {
 	public class Emulator
 	{
-		private const int TimeBetweenSpawns = 1000;
-		private static readonly TimeSpan DurationOfConnection = TimeSpan.FromMinutes(1);
-		private const int NumberOfBots = 2;
+		private const int TimeBetweenSpawns = 350;
+		private static readonly TimeSpan DurationOfConnection = TimeSpan.FromMinutes(10);
+		private const int NumberOfBots = 2000;
 		private const int RanSleepMin = 150;
 		private const int RanSleepMax = 450;
 		private const int RequestChunkRadius = 5;
@@ -43,15 +43,16 @@ namespace MiNET.Ftl.Emulator
 				Console.WriteLine("Press <Enter> to start emulation...");
 				Console.ReadLine();
 
+				DedicatedThreadPool threadPool = new DedicatedThreadPool(new DedicatedThreadPoolSettings(Environment.ProcessorCount));
+				ProxyMessageHandler.FastThreadPool = threadPool;
+
 				int threads;
 				int iothreads;
 				ThreadPool.GetMinThreads(out threads, out iothreads);
+				ThreadPool.SetMinThreads(4000, 4000);
 
-				DedicatedThreadPool threadPool = new DedicatedThreadPool(new DedicatedThreadPoolSettings(threads));
-				ProxyMessageHandler.FastThreadPool = threadPool;
-
-				ThreadPool.SetMinThreads(32000, 4000);
-				ThreadPool.SetMaxThreads(32000, 4000);
+				ThreadPool.GetMaxThreads(out threads, out iothreads);
+				ThreadPool.SetMaxThreads(threads, 4000);
 
 				Emulator emulator = new Emulator {Running = true};
 				Stopwatch watch = new Stopwatch();

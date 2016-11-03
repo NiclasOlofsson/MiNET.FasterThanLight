@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,8 +18,12 @@ namespace MiNET.Ftl.Core
 			int iothreads;
 			ThreadPool.GetMinThreads(out threads, out iothreads);
 
-			DedicatedThreadPool threadPool = new DedicatedThreadPool(new DedicatedThreadPoolSettings(threads));
+			DedicatedThreadPool threadPool = new DedicatedThreadPool(new DedicatedThreadPoolSettings(Environment.ProcessorCount));
 			ProxyMessageHandler.FastThreadPool = threadPool;
+
+			ThreadPool.GetMaxThreads(out threads, out iothreads);
+			ThreadPool.SetMinThreads(4000, 4000);
+			ThreadPool.SetMaxThreads(threads, 4000);
 
 			List<EndPoint> remoteServers = new List<EndPoint>();
 			remoteServers.Add(new IPEndPoint(IPAddress.Loopback, 51234));

@@ -42,7 +42,7 @@ namespace MiNET.Ftl.Core.Proxy
 			Log.Debug("CONNECTED from proxy to local server handler");
 
 			var stream = _client.GetStream();
-			_writer = new BinaryWriter(stream);
+			_writer = new BinaryWriter(new BufferedStream(stream, _client.SendBufferSize));
 			BinaryReader reader = new BinaryReader(stream);
 
 			new Thread(() =>
@@ -54,6 +54,7 @@ namespace MiNET.Ftl.Core.Proxy
 					try
 					{
 						int len = reader.ReadInt32();
+
 						if (len == -1)
 						{
 							Close();
@@ -62,10 +63,12 @@ namespace MiNET.Ftl.Core.Proxy
 
 						byte[] bytes = reader.ReadBytes(len);
 
+						if (bytes.Length > _client.ReceiveBufferSize) Log.Warn($"Data of length {bytes.Length}bytes is bigger than TCP buffer {_client.ReceiveBufferSize}bytes");
+
 						if (len == 0) continue;
 
-						//FastThreadPool.QueueUserWorkItem(() =>
-						//{
+						FastThreadPool.QueueUserWorkItem(() =>
+						{
 							var message = PackageFactory.CreatePackage(bytes[0], bytes, "mcpe");
 							if (message == null)
 							{
@@ -81,10 +84,10 @@ namespace MiNET.Ftl.Core.Proxy
 							{
 								message.Timer.Restart();
 
-								Log.Debug($"Got message {message.GetType().Name}");
+								if(Log.IsDebugEnabled) Log.Debug($"Got message {message.GetType().Name}");
 								_networkHandler.SendPackage(message);
 							}
-						//});
+						});
 					}
 					catch (Exception e)
 					{
@@ -100,7 +103,7 @@ namespace MiNET.Ftl.Core.Proxy
 
 		private void Close()
 		{
-			Log.Warn("Closing proxy connection to node");
+			Log.Debug("Closing proxy connection to node");
 
 			lock (_writeLock)
 			{

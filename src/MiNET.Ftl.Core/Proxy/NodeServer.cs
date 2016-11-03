@@ -29,6 +29,8 @@ namespace MiNET.Ftl.Core.Proxy
 				Log.Debug($"Proxy connecting to node on {_serverEndpoint}");
 
 				TcpClient client = new TcpClient() /*{NoDelay = true}*/;
+				client.NoDelay = true;
+				client.ReceiveBufferSize = client.ReceiveBufferSize * 10;
 
 				{
 					var endPoint = (IPEndPoint) _serverEndpoint;
@@ -37,7 +39,7 @@ namespace MiNET.Ftl.Core.Proxy
 					Log.Debug("Connected to node, requesting new player");
 
 					var stream = client.GetStream();
-					BinaryWriter writer = new BinaryWriter(stream);
+					BinaryWriter writer = new BinaryWriter(new BufferedStream(stream, client.SendBufferSize)); ;
 					BinaryReader reader = new BinaryReader(stream);
 
 					FtlCreatePlayer message = new FtlCreatePlayer();

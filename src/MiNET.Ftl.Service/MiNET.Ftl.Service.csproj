@@ -62,8 +62,8 @@
       <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.1.0.0\lib\net45\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MiNET, Version=1.0.1177.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MiNET.1.0.1177\lib\net461\MiNET.dll</HintPath>
+    <Reference Include="MiNET, Version=1.0.1185.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiNET.1.0.1185\lib\net461\MiNET.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

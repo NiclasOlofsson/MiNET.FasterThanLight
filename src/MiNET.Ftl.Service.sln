@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiNET.Ftl.Core", "MiNET.Ftl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiNET.Ftl.Emulator", "MiNET.Ftl.Emulator\MiNET.Ftl.Emulator.csproj", "{116CEA3C-9BA2-484D-91E1-887E43B85636}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiNET.Ping", "MiNET.Ping\MiNET.Ping.csproj", "{AC0CD0A7-C884-4305-9B37-2D11292031E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{116CEA3C-9BA2-484D-91E1-887E43B85636}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{116CEA3C-9BA2-484D-91E1-887E43B85636}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{116CEA3C-9BA2-484D-91E1-887E43B85636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC0CD0A7-C884-4305-9B37-2D11292031E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC0CD0A7-C884-4305-9B37-2D11292031E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC0CD0A7-C884-4305-9B37-2D11292031E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC0CD0A7-C884-4305-9B37-2D11292031E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

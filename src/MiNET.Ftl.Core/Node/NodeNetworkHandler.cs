@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -11,24 +13,16 @@ namespace MiNET.Ftl.Core.Node
 {
 	public class NodeNetworkHandler : INetworkHandler
 	{
-		internal static DedicatedThreadPool FastThreadPool { get; set; }
+		public static DedicatedThreadPool FastThreadPool { get; set; }
 
 		static NodeNetworkHandler()
 		{
-			int threads;
-			int iothreads;
-			ThreadPool.GetMinThreads(out threads, out iothreads);
-			FastThreadPool = new DedicatedThreadPool(new DedicatedThreadPoolSettings(threads));
-
-			ThreadPool.SetMinThreads(32000, 4000);
-			ThreadPool.SetMaxThreads(32000, 4000);
 		}
 
 		private static readonly ILog Log = LogManager.GetLogger(typeof (NodeNetworkHandler));
 
 		private readonly MiNetServer _server;
 		private readonly Player _player;
-		//private readonly TcpListener _listener;
 		private BinaryWriter _writer;
 		private TcpClient _client;
 
@@ -36,9 +30,8 @@ namespace MiNET.Ftl.Core.Node
 		{
 			_server = server;
 			_player = player;
-			//_listener = listener;
-
 			_client = client;
+
 			new Thread(() =>
 			{
 				try
@@ -55,7 +48,7 @@ namespace MiNET.Ftl.Core.Node
 
 					NetworkStream stream = _client.GetStream();
 					BinaryReader reader = new BinaryReader(stream);
-					_writer = new BinaryWriter(stream);
+					_writer = new BinaryWriter(new BufferedStream(stream, _client.SendBufferSize));
 					while (true)
 					{
 						if (_client == null) return;
@@ -99,9 +92,9 @@ namespace MiNET.Ftl.Core.Node
 						{
 							try
 							{
-								Close();
+								_player.Disconnect("Lost connection", false);
 							}
-							catch (Exception ex)
+							catch (Exception)
 							{
 								_client = null;
 							}
@@ -114,6 +107,8 @@ namespace MiNET.Ftl.Core.Node
 			})
 			{IsBackground = true}.Start();
 		}
+
+		private Stopwatch _loginTimer = new Stopwatch();
 
 		private void HandlePackage(Package message)
 		{
@@ -138,6 +133,7 @@ namespace MiNET.Ftl.Core.Node
 
 			else if (typeof (McpeClientMagic) == message.GetType())
 			{
+				_loginTimer.Start();
 				// Start encrypotion
 				handler.HandleMcpeClientMagic((McpeClientMagic) message);
 			}
@@ -282,39 +278,51 @@ namespace MiNET.Ftl.Core.Node
 
 		public void Close()
 		{
+			Log.Warn($"Called Close() node for {_player?.Username}");
+
+			var writer = _writer;
+			var client = _client;
+
+			_writer = null;
+			_client = null;
+
 			PlayerNetworkSession value;
-			_server.ServerInfo.PlayerSessions.TryRemove((IPEndPoint) _client.Client.RemoteEndPoint, out value);
+			_server.ServerInfo.PlayerSessions.TryRemove((IPEndPoint) client.Client.RemoteEndPoint, out value);
 
 			lock (_writeLock)
 			{
-				if (_writer != null)
+				if (writer != null)
 				{
 					try
 					{
-						_writer.Write(-1); // Signale EOS
-						_writer.Flush();
-						_writer.Close();
-						_writer = null;
+						writer.Write(-1); // Signale EOS
+						writer.Flush();
+						writer.Close();
 					}
 					catch (Exception)
 					{
 					}
 				}
 
-				if (_client != null)
+				if (client != null)
 				{
-					_client.Close();
+					client.Close();
 				}
-
-				_client = null;
 			}
 		}
 
 
 		private object _writeLock = new object();
 
-		public void SendPackage(Package package)
+		public void SendPackageToProxy(Package package)
 		{
+			if (!_player.IsConnected) return;
+
+			Log.Debug($"Writing package to proxy {package.GetType().Name}");
+
+
+			//FastThreadPool.QueueUserWorkItem(() =>
+			//{
 			if (_server != null)
 			{
 				ServerInfo serverInfo = _server.ServerInfo;
@@ -325,11 +333,10 @@ namespace MiNET.Ftl.Core.Node
 			{
 				if (_writer == null) return;
 
-				Log.Debug($"Writing package to proxy {package.GetType().Name}");
-
 				try
 				{
 					var bytes = package.Encode();
+					if(bytes.Length > _client.SendBufferSize) Log.Warn($"Data of length {bytes.Length}bytes is bigger than TCP buffe {_client.SendBufferSize}bytes");
 					_writer.Write(bytes.Length);
 					_writer.Write(bytes);
 					_writer.Flush();
@@ -347,17 +354,56 @@ namespace MiNET.Ftl.Core.Node
 				}
 			}
 
-			//package.PutPool();
+			var game = package as McpePlayerStatus;
+			if (game != null)
+			{
+				if (game.status == 3)
+				{
+					if (_loginTimer != null && _loginTimer.Elapsed > TimeSpan.FromSeconds(1))
+					{
+						_loginTimer = null;
+						Log.Warn($"Took long time ({_loginTimer.ElapsedMilliseconds}ms) to login for user {_player?.Username}");
+					}
+				}
+			}
+
+			package.PutPool();
+			//});
 		}
 
 		public void SendDirectPackage(Package package)
 		{
-			SendPackage(package);
+			Log.Debug($"Writing package direct to proxy {package.GetType().Name}");
+
+			SendPackageToProxy(package);
 		}
 
 		public IPEndPoint GetClientEndPoint()
 		{
 			return null;
+		}
+
+
+		private Timer _sendTicker;
+		private Queue<Package> _sendQueueNotConcurrent = new Queue<Package>();
+		private object _queueSync = new object();
+
+		public void SendPackage(Package package)
+		{
+			SendPackageToProxy(package);
+			//MiNetServer.TraceSend(package);
+
+			//if (package == null) return;
+
+			//lock (_queueSync)
+			//{
+			//	if (_sendTicker == null)
+			//	{
+			//		_sendTicker = new Timer(SendQueue, null, 10, 10); // RakNet send tick-time
+			//	}
+
+			//	_sendQueueNotConcurrent.Enqueue(package);
+			//}
 		}
 	}
 }

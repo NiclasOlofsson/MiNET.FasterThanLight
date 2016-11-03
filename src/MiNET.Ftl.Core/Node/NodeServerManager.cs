@@ -20,10 +20,9 @@ namespace MiNET.Ftl.Core.Node
 			_server = server;
 
 			_listener = new TcpListener(IPAddress.Loopback, port);
-			_listener.Server.NoDelay = true;
 
 			// Start listening for client requests.
-			_listener.Start(100000);
+			_listener.Start();
 
 			new Thread(() =>
 			{
@@ -36,7 +35,8 @@ namespace MiNET.Ftl.Core.Node
 					// You could also user server.AcceptSocket() here.
 					//using (TcpClient client = _listener.AcceptTcpClient())
 					TcpClient client = _listener.AcceptTcpClient();
-
+					client.NoDelay = true;
+					client.SendBufferSize = client.SendBufferSize*10;
 					NodeNetworkHandler.FastThreadPool.QueueUserWorkItem(() =>
 					{
 						try
@@ -68,10 +68,8 @@ namespace MiNET.Ftl.Core.Node
 									Log.Debug($"Client ID={message.clientId}");
 									Log.Debug($"Got Skin={message.skin != null}");
 
-									//var handlerListener = new TcpListener(IPAddress.Any, 0);
-									//handlerListener.Start();
-
 									Player player = _server.PlayerFactory.CreatePlayer(_server, (IPEndPoint) client.Client.RemoteEndPoint);
+									player.UseCreativeInventory = false;
 
 									var handler = new NodeNetworkHandler(_server, player, client);
 
@@ -84,7 +82,7 @@ namespace MiNET.Ftl.Core.Node
 									player.Skin = message.skin;
 									message.PutPool();
 
-									BinaryWriter writer = new BinaryWriter(stream);
+									BinaryWriter writer = new BinaryWriter(new BufferedStream(stream, client.SendBufferSize)); 
 									IPEndPoint endpoint = (IPEndPoint) client.Client.LocalEndPoint;
 									writer.Write(endpoint.Port);
 									writer.Flush();
