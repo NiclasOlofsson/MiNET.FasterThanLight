@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiNET.Ftl.Service", "MiNET.Ftl.Service\MiNET.Ftl.Service.csproj", "{BFAE74BF-B98D-4EA6-97DE-FCE533B7F70A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiNET.ConsoleRunner", "MiNET.ConsoleRunner\MiNET.ConsoleRunner.csproj", "{6FD68221-DC84-4BBF-9263-9F589F169224}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiNET.Ftl.Core", "MiNET.Ftl.Core\MiNET.Ftl.Core.csproj", "{61B60452-6331-4978-9050-F8DA45160C21}"
@@ -13,16 +11,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiNET.Ftl.Emulator", "MiNET
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiNET.Ping", "MiNET.Ping\MiNET.Ping.csproj", "{AC0CD0A7-C884-4305-9B37-2D11292031E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiNET.Ftl..Node.Service", "MiNET.Ftl.Node.Service\MiNET.Ftl..Node.Service.csproj", "{B7B858C3-B93D-483B-8500-18AF19AD73BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiNET.Ftl..Proxy.Service", "MiNET.Ftl.Proxy.Service\MiNET.Ftl..Proxy.Service.csproj", "{BFAE74BF-B98D-4EA6-97DE-FCE533B7F70A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BFAE74BF-B98D-4EA6-97DE-FCE533B7F70A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFAE74BF-B98D-4EA6-97DE-FCE533B7F70A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BFAE74BF-B98D-4EA6-97DE-FCE533B7F70A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BFAE74BF-B98D-4EA6-97DE-FCE533B7F70A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6FD68221-DC84-4BBF-9263-9F589F169224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6FD68221-DC84-4BBF-9263-9F589F169224}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FD68221-DC84-4BBF-9263-9F589F169224}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +37,14 @@ Global
 		{AC0CD0A7-C884-4305-9B37-2D11292031E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC0CD0A7-C884-4305-9B37-2D11292031E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC0CD0A7-C884-4305-9B37-2D11292031E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7B858C3-B93D-483B-8500-18AF19AD73BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7B858C3-B93D-483B-8500-18AF19AD73BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7B858C3-B93D-483B-8500-18AF19AD73BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7B858C3-B93D-483B-8500-18AF19AD73BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFAE74BF-B98D-4EA6-97DE-FCE533B7F70A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFAE74BF-B98D-4EA6-97DE-FCE533B7F70A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFAE74BF-B98D-4EA6-97DE-FCE533B7F70A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFAE74BF-B98D-4EA6-97DE-FCE533B7F70A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

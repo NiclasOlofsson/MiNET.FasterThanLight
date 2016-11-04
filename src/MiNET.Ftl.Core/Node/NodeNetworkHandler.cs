@@ -250,10 +250,15 @@ namespace MiNET.Ftl.Core.Node
 				handler.HandleMcpeItemFramDropItem((McpeItemFramDropItem) message);
 			}
 
+			else if (typeof(McpeResourcePackClientResponse) == message.GetType())
+			{
+				handler.HandleMcpeResourcePackClientResponse((McpeResourcePackClientResponse)message);
+			}
+
 			else if (typeof (McpeItemFramDropItem) == message.GetType())
 			{
 				handler.HandleMcpePlayerInput((McpePlayerInput) message);
-			}
+ 			}
 
 			else
 			{

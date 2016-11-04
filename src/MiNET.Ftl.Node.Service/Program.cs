@@ -1,5 +1,4 @@
-﻿using System;
-using log4net;
+﻿using log4net;
 using log4net.Config;
 using MiNET.Ftl.Core;
 using Topshelf;
@@ -12,21 +11,21 @@ using Topshelf;
 // directory (i.e. the directory containing TestApp.exe)
 // The config file will be watched for changes.
 
-namespace MiNET.Ftl.Service
+namespace MiNET.Ftl.Node.Service
 {
-	public class MiNetFtlService
+	public class MiNetFtlNodeService
 	{
-		private static readonly ILog Log = LogManager.GetLogger(typeof (MiNetFtlService));
+		private static readonly ILog Log = LogManager.GetLogger(typeof (MiNetFtlNodeService));
 
-		private FtlServer _server;
+		private FtlNodeServer _server;
 
 		/// <summary>
 		///     Starts this instance.
 		/// </summary>
 		private void Start()
 		{
-			Log.Info("Starting MiNET FTL");
-			_server = new FtlServer();
+			Log.Info("Starting MiNET FTL node");
+			_server = new FtlNodeServer();
 			_server.StartServer();
 		}
 
@@ -35,7 +34,7 @@ namespace MiNET.Ftl.Service
 		/// </summary>
 		private void Stop()
 		{
-			Log.Info("Stopping MiNET FTL");
+			Log.Info("Stopping MiNET FTL node");
 			_server.StopServer();
 		}
 
@@ -49,27 +48,18 @@ namespace MiNET.Ftl.Service
 
 			HostFactory.Run(host =>
 			{
-				host.Service<MiNetFtlService>(s =>
+				host.Service<MiNetFtlNodeService>(s =>
 				{
-					s.ConstructUsing(construct => new MiNetFtlService());
+					s.ConstructUsing(construct => new MiNetFtlNodeService());
 					s.WhenStarted(service => service.Start());
 					s.WhenStopped(service => service.Stop());
 				});
 
 				host.RunAsLocalService();
-				host.SetDisplayName("MiNET FTL Service");
-				host.SetDescription("MiNET faster-than-light server.");
-				host.SetServiceName("MiNET");
+				host.SetDisplayName("MiNET FTL Node Service");
+				host.SetDescription("MiNET faster-than-light node server.");
+				host.SetServiceName("MiNET Node");
 			});
-		}
-
-		/// <summary>
-		///     Determines whether is running on mono.
-		/// </summary>
-		/// <returns></returns>
-		public static bool IsRunningOnMono()
-		{
-			return Type.GetType("Mono.Runtime") != null;
 		}
 	}
 }

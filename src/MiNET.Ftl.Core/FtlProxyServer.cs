@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 using MiNET.Ftl.Core.Proxy;
 using MiNET.Utils;
 
 namespace MiNET.Ftl.Core
 {
-	public class FtlServer
+	public class FtlProxyServer
 	{
-		MiNetServer _proxy;
+		MiNetServer _server;
 
-		public FtlServer()
+		public FtlProxyServer()
 		{
 			int threads;
 			int iothreads;
@@ -27,19 +26,19 @@ namespace MiNET.Ftl.Core
 
 			List<EndPoint> remoteServers = new List<EndPoint>();
 			remoteServers.Add(new IPEndPoint(IPAddress.Loopback, 51234));
-			_proxy = new MiNetServer();
-			_proxy.ServerRole = ServerRole.Proxy;
-			_proxy.ServerManager = new ProxyServerManager(remoteServers);
+			_server = new MiNetServer();
+			_server.ServerRole = ServerRole.Proxy;
+			_server.ServerManager = new ProxyServerManager(remoteServers);
 		}
 
 		public void StartServer()
 		{
-			_proxy.StartServer();
+			_server.StartServer();
 		}
 
 		public void StopServer()
 		{
-			_proxy.StopServer();
+			_server.StopServer();
 		}
 	}
 }
