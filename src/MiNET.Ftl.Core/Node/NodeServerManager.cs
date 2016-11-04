@@ -47,6 +47,7 @@ namespace MiNET.Ftl.Core.Node
 							NetworkStream stream = client.GetStream();
 							BinaryReader reader = new BinaryReader(stream);
 
+							int packageNs = reader.ReadByte();
 							int len = reader.ReadInt32();
 							byte[] bytes = reader.ReadBytes(len);
 							if (bytes[0] != 0x01)

@@ -53,6 +53,7 @@ namespace MiNET.Ftl.Core.Proxy
 
 					try
 					{
+						int packageNs = reader.ReadByte();
 						int len = reader.ReadInt32();
 
 						if (len == -1)
@@ -69,22 +70,25 @@ namespace MiNET.Ftl.Core.Proxy
 
 						FastThreadPool.QueueUserWorkItem(() =>
 						{
-							var message = PackageFactory.CreatePackage(bytes[0], bytes, "mcpe");
-							if (message == null)
+							Package message = null;
+							if (packageNs == 0)
+							{
+								message = PackageFactory.CreatePackage(bytes[0], bytes, "mcpe");
+							}
+							else if (packageNs == 1)
 							{
 								message = PackageFactory.CreatePackage(bytes[0], bytes, "ftl");
-
-								if (message == null)
-								{
-									Log.Error($"Bad parse of message");
-								}
 							}
 
-							if (message != null)
+							if (message == null)
+							{
+								Log.Error($"Bad parse of message");
+							}
+							else
 							{
 								message.Timer.Restart();
 
-								if(Log.IsDebugEnabled) Log.Debug($"Got message {message.GetType().Name}");
+								if (Log.IsDebugEnabled) Log.Debug($"Got message {message.GetType().Name}");
 								_networkHandler.SendPackage(message);
 							}
 						});
@@ -143,6 +147,7 @@ namespace MiNET.Ftl.Core.Proxy
 				Log.Debug($"Sending from proxy to node {message.GetType().Name}");
 				try
 				{
+					_writer.Write((byte)0);
 					_writer.Write(message.Bytes.Length);
 					_writer.Write(message.Bytes);
 					_writer.Flush();
@@ -172,6 +177,7 @@ namespace MiNET.Ftl.Core.Proxy
 				Log.Debug($"Sending from proxy to node {message.GetType().Name}");
 				try
 				{
+					_writer.Write((byte)0);
 					_writer.Write(message.Length);
 					_writer.Write(message);
 					_writer.Flush();

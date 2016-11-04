@@ -50,6 +50,7 @@ namespace MiNET.Ftl.Core.Proxy
 					message.skin = playerInfo.Skin;
 					var bytes = message.Encode();
 
+					writer.Write((byte)1);
 					writer.Write(bytes.Length);
 					writer.Write(bytes);
 					writer.Flush();

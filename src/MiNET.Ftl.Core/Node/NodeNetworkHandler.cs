@@ -56,20 +56,25 @@ namespace MiNET.Ftl.Core.Node
 
 						try
 						{
+							int packageNs = reader.ReadByte();
 							int len = reader.ReadInt32();
 							byte[] bytes = reader.ReadBytes(len);
 
-							var message = PackageFactory.CreatePackage(bytes[0], bytes, "mcpe");
-							if (message == null)
+							Package message = null;
+							if (packageNs == 0)
+							{
+								message = PackageFactory.CreatePackage(bytes[0], bytes, "mcpe");
+							}
+							else if (packageNs == 1)
 							{
 								message = PackageFactory.CreatePackage(bytes[0], bytes, "ftl");
-								if (message == null)
-								{
-									Log.Error($"Bad parse of message");
-								}
 							}
 
-							if (message != null)
+							if (message == null)
+							{
+								Log.Error($"Bad parse of message");
+							}
+							else
 							{
 								message.Timer.Restart();
 
@@ -250,15 +255,15 @@ namespace MiNET.Ftl.Core.Node
 				handler.HandleMcpeItemFramDropItem((McpeItemFramDropItem) message);
 			}
 
-			else if (typeof(McpeResourcePackClientResponse) == message.GetType())
+			else if (typeof (McpeResourcePackClientResponse) == message.GetType())
 			{
-				handler.HandleMcpeResourcePackClientResponse((McpeResourcePackClientResponse)message);
+				handler.HandleMcpeResourcePackClientResponse((McpeResourcePackClientResponse) message);
 			}
 
 			else if (typeof (McpeItemFramDropItem) == message.GetType())
 			{
 				handler.HandleMcpePlayerInput((McpePlayerInput) message);
- 			}
+			}
 
 			else
 			{
@@ -300,6 +305,7 @@ namespace MiNET.Ftl.Core.Node
 				{
 					try
 					{
+						writer.Write((byte)0);
 						writer.Write(-1); // Signale EOS
 						writer.Flush();
 						writer.Close();
@@ -341,7 +347,8 @@ namespace MiNET.Ftl.Core.Node
 				try
 				{
 					var bytes = package.Encode();
-					if(bytes.Length > _client.SendBufferSize) Log.Warn($"Data of length {bytes.Length}bytes is bigger than TCP buffe {_client.SendBufferSize}bytes");
+					if (bytes.Length > _client.SendBufferSize) Log.Warn($"Data of length {bytes.Length}bytes is bigger than TCP buffe {_client.SendBufferSize}bytes");
+					_writer.Write((byte)0);
 					_writer.Write(bytes.Length);
 					_writer.Write(bytes);
 					_writer.Flush();
