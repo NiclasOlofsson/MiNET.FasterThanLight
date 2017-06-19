@@ -4,7 +4,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using log4net;
-using MiNET.Net;
+using MiNET.Ftl.Core.Net;
+using FtlCreatePlayer = MiNET.Net.FtlCreatePlayer;
 
 namespace MiNET.Ftl.Core.Node
 {
@@ -56,7 +57,7 @@ namespace MiNET.Ftl.Core.Node
 							}
 							else
 							{
-								FtlCreatePlayer message = PackageFactory.CreatePackage(bytes[0], bytes, "ftl") as FtlCreatePlayer;
+								FtlCreatePlayer message = FtlPackageFactory.CreatePackage(bytes[0], bytes) as FtlCreatePlayer;
 								if (message == null)
 								{
 									Log.Error($"Bad parse of message");
@@ -83,7 +84,7 @@ namespace MiNET.Ftl.Core.Node
 									player.Skin = message.skin;
 									message.PutPool();
 
-									BinaryWriter writer = new BinaryWriter(new BufferedStream(stream, client.SendBufferSize)); 
+									BinaryWriter writer = new BinaryWriter(new BufferedStream(stream, client.SendBufferSize));
 									IPEndPoint endpoint = (IPEndPoint) client.Client.LocalEndPoint;
 									writer.Write(endpoint.Port);
 									writer.Flush();
