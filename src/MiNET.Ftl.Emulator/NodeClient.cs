@@ -1,4 +1,29 @@
-﻿using System;
+﻿#region LICENSE
+
+// The contents of this file are subject to the Common Public Attribution
+// License Version 1.0. (the "License"); you may not use this file except in
+// compliance with the License. You may obtain a copy of the License at
+// https://github.com/NiclasOlofsson/MiNET/blob/master/LICENSE. 
+// The License is based on the Mozilla Public License Version 1.1, but Sections 14 
+// and 15 have been added to cover use of software over a computer network and 
+// provide for limited attribution for the Original Developer. In addition, Exhibit A has 
+// been modified to be consistent with Exhibit B.
+// 
+// Software distributed under the License is distributed on an "AS IS" basis,
+// WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
+// the specific language governing rights and limitations under the License.
+// 
+// The Original Code is Niclas Olofsson.
+// 
+// The Original Developer is the Initial Developer.  The Initial Developer of
+// the Original Code is Niclas Olofsson.
+// 
+// All portions of the code written by Niclas Olofsson are Copyright (c) 2014-2017 Niclas Olofsson. 
+// All Rights Reserved.
+
+#endregion
+
+using System;
 using System.Net;
 using System.Text;
 using log4net;
@@ -10,7 +35,7 @@ namespace MiNET.Ftl.Emulator
 {
 	public class NodeClient
 	{
-		private static readonly ILog Log = LogManager.GetLogger(typeof (NodeClient));
+		private static readonly ILog Log = LogManager.GetLogger(typeof(NodeClient));
 
 		private readonly IPEndPoint _endPoint;
 		private readonly string _username;
@@ -48,7 +73,7 @@ namespace MiNET.Ftl.Emulator
 			PlayerInfo playerInfo = new PlayerInfo
 			{
 				Username = _username,
-				ClientUuid = new UUID(Guid.NewGuid()),
+				ClientUuid = new UUID(Guid.NewGuid().ToString()),
 				ClientId = ClientId,
 				ServerAddress = "localhost",
 				Skin = skin
@@ -63,11 +88,11 @@ namespace MiNET.Ftl.Emulator
 				return;
 			}
 
-			_toNodeHandler.HandleMcpeClientMagic(null);
+			_toNodeHandler.HandleMcpeClientToServerHandshake(null);
 
 			McpeRequestChunkRadius radius = McpeRequestChunkRadius.CreateObject();
 			radius.chunkRadius = ChunkRadius;
-			
+
 			_toNodeHandler.WriteBytes(radius.Encode());
 			radius.PutPool();
 
@@ -83,7 +108,7 @@ namespace MiNET.Ftl.Emulator
 			//Log.Debug($"Sending move {EntityId}: {CurrentLocation}");
 
 			McpeMovePlayer movePlayerPacket = McpeMovePlayer.CreateObject();
-			movePlayerPacket.entityId = EntityId;
+			movePlayerPacket.runtimeEntityId = EntityId;
 			movePlayerPacket.x = CurrentLocation.X;
 			movePlayerPacket.y = CurrentLocation.Y;
 			movePlayerPacket.z = CurrentLocation.Z;

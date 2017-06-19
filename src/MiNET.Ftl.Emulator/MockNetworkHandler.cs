@@ -42,7 +42,7 @@ namespace MiNET.Ftl.Emulator
 
 		private void OnMcpeStartGame(McpeStartGame package)
 		{
-			_nodeClient.EntityId = package.entityId;
+			_nodeClient.EntityId = package.runtimeEntityId;
 		}
 
 		private void OnMcpeRespawn(McpeRespawn package)
@@ -55,6 +55,11 @@ namespace MiNET.Ftl.Emulator
 		public IPEndPoint GetClientEndPoint()
 		{
 			return null;
+		}
+
+		public long GetNetworkNetworkIdentifier()
+		{
+			return 0;
 		}
 	}
 }
